@@ -1,14 +1,11 @@
 package org.example.model;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Person")
-public class Person {
-
+@Table(name = "Actor")
+public class Actor {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +17,18 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    @OneToOne(mappedBy = "person")
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    private Passport passport;
+    @ManyToMany
+    @JoinTable(
+            name = "Actor_Movie",
+            joinColumns = @JoinColumn(name = "actor_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> movies;
 
-    public Person() {
+    public Actor() {
     }
 
-    public Person(String name, int age) {
+    public Actor(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -56,18 +57,20 @@ public class Person {
         this.age = age;
     }
 
-    public Passport getPassport() {
-        return passport;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
-    public void setPassport(Passport passport) {
-        this.passport = passport;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
-    public Person(int id, String name, int age, Passport passport) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        this.passport = passport;
+    @Override
+    public String toString() {
+        return "Actor{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }
